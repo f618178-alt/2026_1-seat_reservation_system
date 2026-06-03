@@ -11,6 +11,15 @@ class SeatStore:
             raise ValueError("Seat is already reserved.")
         self._seats[seat_id] = name
         return seat_id, name
+     def reserve_multiple(self, seat_ids, name):
+         for seat_id in seat_ids:
+            current = self._get(seat_id)
+            if current is not None:
+                raise ValueError(f"{seat_id} is already reserved.")
+
+         for seat_id in seat_ids:
+            self._seats[seat_id] = name
+         return [(seat_id, name) for seat_id in seat_ids]
 
     def cancel(self, seat_id, name=None):
         current = self._get(seat_id)

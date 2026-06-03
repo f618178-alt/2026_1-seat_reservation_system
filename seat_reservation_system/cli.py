@@ -3,7 +3,7 @@ from seat_reservation_system.seats import SEAT_IDS
 
 HELP_TEXT = """Commands:
 list                      - List all seats
-reserve <seat_id> <name>  - Reserve a seat
+reserve <name> <seat_id1> <seat_id2>  - Reserve multiple seat
 cancel <seat_id> [name]   - Cancel a reservation
 status <seat_id>          - Show seat status
 stats                     - Show summary stats
@@ -35,10 +35,15 @@ def run_cli():
             if command == "list":
                 for seat_id, name in store.list_seats():
                     _print_seat(seat_id, name)
-            elif command == "reserve":
+            elif command == "reserve many":
                 _require_args(command, args, 2)
-                seat_id, name = store.reserve(int(args[0]), args[1])
-                _print_seat(seat_id, name)
+                 name = args[0]
+                 seat_ids = [int(seat_id) for seat_id in args[1:]]
+
+                results = store.reserve_multiple(seat_ids, name)
+
+                for seat_id, name in results:
+                    _print_seat(seat_id, name)
             elif command == "cancel":
                 _require_args(command, args, 1)
                 name = args[1] if len(args) > 1 else None
